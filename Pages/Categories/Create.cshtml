@@ -1,0 +1,45 @@
+﻿@page
+@model ExpenseTracker.Pages.Categories.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="mb-4">Create Category</h1>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Category.UserID"  class="form-control mb-2" />
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Category.BudgetID" class="control-label">Budget Title</label>
+                <select asp-for="Category.BudgetID" class="form-control" asp-items="Model.BudgetTitles"></select>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Category.CategoryName" class="control-label">CategoryName</label>
+                <input asp-for="Category.CategoryName" class="form-control" />
+                <span asp-validation-for="Category.CategoryName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Category.AllocatedAmount" class="control-label"> Allocated Amount</label>
+                <input asp-for="Category.AllocatedAmount" class="form-control" />
+                <span asp-validation-for="Category.AllocatedAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4 mb-3">
+                <input type="submit" value="Create" class="btn btn-primary w-100" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

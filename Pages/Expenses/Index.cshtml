@@ -1,0 +1,99 @@
+﻿@page
+@model ExpenseTracker.Pages.Expenses.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="mb-5">Expense Management</h2>
+<div class="input-group mb-5">
+    <input type="text" class="form-control" placeholder="Expense Title" aria-label="Recipient's username" aria-describedby="button-addon2">
+    <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
+</div>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary mb-2">Create Expense</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Budget
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Expense) {
+        <tr>
+           <td>
+               @Html.DisplayFor(modelItem => item.Description)
+           </td>
+           <td>
+               @Html.DisplayFor(modelItem => item.Category.CategoryName)
+           </td>
+           <td>
+               @Html.DisplayFor(modelItem => item.Budget.BudgetName)
+           </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+         
+        
+            <td>
+                    <div class="d-flex">
+                        <a asp-page="./Edit" asp-route-id="@item.ExpenseID" class="btn btn-primary me-2">Edit</a>
+
+                        <form method="post" asp-page="/Expenses/Delete">
+                            <input type="hidden" name="id" value="@item.ExpenseID" />
+
+                            <!-- Button to trigger the modal -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal-@item.ExpenseID">
+                                Delete
+                            </button>
+
+                            <!-- ... Modal code ... -->
+                            <div class="modal" id="deleteConfirmationModal-@item.ExpenseID" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this expense?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                            <!-- This button will submit the form when clicked -->
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
