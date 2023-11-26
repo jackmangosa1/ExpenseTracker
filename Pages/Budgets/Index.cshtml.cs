@@ -20,11 +20,18 @@ namespace ExpenseTracker.Pages.Budgets
         }
 
         public IList<Budget> Budget { get;set; } = default!;
-
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
         public async Task OnGetAsync()
         {
-            Budget = await _context.Budget
-                .Include(b => b.User).ToListAsync();
+            IQueryable<Budget> budgetQuery = _context.Budget.Include(b => b.User);
+
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                budgetQuery = budgetQuery.Where(b => b.BudgetName.Contains(SearchTerm));
+            }
+
+            Budget = await budgetQuery.ToListAsync();
         }
     }
 }

@@ -20,12 +20,20 @@ namespace ExpenseTracker.Pages.Categories
         }
 
         public IList<Category> Category { get;set; } = default!;
-
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
         public async Task OnGetAsync()
         {
-            Category = await _context.ExpenseCategory
-                .Include(c => c.Budget)
-                .Include(c => c.User).ToListAsync();
+            IQueryable<Category> categoryQuery = _context.ExpenseCategory
+       .Include(c => c.Budget)
+       .Include(c => c.User);
+
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                categoryQuery = categoryQuery.Where(c => c.CategoryName.Contains(SearchTerm));
+            }
+
+            Category = await categoryQuery.ToListAsync();
         }
     }
 }

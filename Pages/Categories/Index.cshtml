@@ -6,10 +6,12 @@
 }
 
 <h2 class="mb-5">Category Management</h2>
-<div class="input-group mb-5">
-    <input type="text" class="form-control" placeholder="Category Title" aria-label="Recipient's username" aria-describedby="button-addon2">
-    <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
-</div>
+<form method="get">
+    <div class="input-group mb-5">
+        <input type="text" class="form-control" placeholder="Category Title" aria-label="Recipient's username" aria-describedby="button-addon2" name="SearchTerm" value="@Model.SearchTerm">
+        <button class="btn btn-primary" type="submit" id="button-addon2">Search</button>
+    </div>
+</form>
 
 <p>
     <a asp-page="Create" class="btn btn-primary mb-2">Create Category</a>
