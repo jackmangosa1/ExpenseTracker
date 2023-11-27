@@ -52,8 +52,12 @@ namespace ExpenseTracker.Pages.Budgets
             var budget = await _context.Budget.FindAsync(id);
             if (budget != null)
             {
-                Budget = budget;
-                _context.Budget.Remove(Budget);
+                // Manually delete related expense categories
+                var relatedExpenseCategories = _context.ExpenseCategory.Where(ec => ec.BudgetID == id);
+                _context.ExpenseCategory.RemoveRange(relatedExpenseCategories);
+
+                // Remove the budget
+                _context.Budget.Remove(budget);
                 await _context.SaveChangesAsync();
             }
 

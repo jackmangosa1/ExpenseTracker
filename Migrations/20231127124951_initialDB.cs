@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExpenseTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class initilaDB : Migration
+    public partial class initialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,8 +55,8 @@ namespace ExpenseTracker.Migrations
                 {
                     CategoryID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    BudgetID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true),
+                    BudgetID = table.Column<int>(type: "int", nullable: true),
                     CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AllocatedAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -68,14 +68,13 @@ namespace ExpenseTracker.Migrations
                         column: x => x.BudgetID,
                         principalTable: "Budget",
                         principalColumn: "BudgetID",
-                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
+                        onDelete: ReferentialAction.Cascade);
+            table.ForeignKey(
                         name: "FK_ExpenseCategory_User_UserID",
                         column: x => x.UserID,
                         principalTable: "User",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
-
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,9 +83,9 @@ namespace ExpenseTracker.Migrations
                 {
                     ExpenseID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    BudgetID = table.Column<int>(type: "int", nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: true),
+                    BudgetID = table.Column<int>(type: "int", nullable: true),
+                    CategoryID = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -98,20 +97,18 @@ namespace ExpenseTracker.Migrations
                         name: "FK_Expense_Budget_BudgetID",
                         column: x => x.BudgetID,
                         principalTable: "Budget",
-                        principalColumn: "BudgetID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "BudgetID");
                     table.ForeignKey(
                         name: "FK_Expense_ExpenseCategory_CategoryID",
                         column: x => x.CategoryID,
                         principalTable: "ExpenseCategory",
-                        principalColumn: "CategoryID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "CategoryID");
                     table.ForeignKey(
                         name: "FK_Expense_User_UserID",
                         column: x => x.UserID,
                         principalTable: "User",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(

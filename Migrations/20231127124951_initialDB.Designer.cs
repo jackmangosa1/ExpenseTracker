@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTracker.Migrations
 {
     [DbContext(typeof(ExpenseTrackerContext))]
-    [Migration("20231123130229_initilaDB")]
-    partial class initilaDB
+    [Migration("20231127124951_initialDB")]
+    partial class initialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,7 @@ namespace ExpenseTracker.Migrations
                     b.Property<decimal>("AllocatedAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BudgetID")
+                    b.Property<int?>("BudgetID")
                         .HasColumnType("int");
 
                     b.Property<string>("CategoryName")
@@ -97,10 +97,10 @@ namespace ExpenseTracker.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BudgetID")
+                    b.Property<int?>("BudgetID")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -164,9 +164,7 @@ namespace ExpenseTracker.Migrations
                 {
                     b.HasOne("ExpenseTracker.Model.Budget", "Budget")
                         .WithMany()
-                        .HasForeignKey("BudgetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BudgetID");
 
                     b.HasOne("ExpenseTracker.Model.User", "User")
                         .WithMany()
@@ -183,15 +181,11 @@ namespace ExpenseTracker.Migrations
                 {
                     b.HasOne("ExpenseTracker.Model.Budget", "Budget")
                         .WithMany()
-                        .HasForeignKey("BudgetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BudgetID");
 
                     b.HasOne("ExpenseTracker.Model.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryID");
 
                     b.HasOne("ExpenseTracker.Model.User", "User")
                         .WithMany()

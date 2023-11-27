@@ -13,7 +13,7 @@ namespace ExpenseTracker.Model
         public int UserID { get; set; }
 
         [ForeignKey("Budget")]
-        public int BudgetID { get; set; }
+        public int? BudgetID { get; set; }
 
         [Required]
         public string CategoryName { get; set; }
@@ -24,5 +24,11 @@ namespace ExpenseTracker.Model
         // Navigation properties
         public User User { get; set; }
         public Budget Budget { get; set; }
+
+        public bool IsAmountValid()
+        {
+            return Budget != null && AllocatedAmount > 0 && AllocatedAmount <= Budget.TotalAmount;
+        }
     }
+    
 }
