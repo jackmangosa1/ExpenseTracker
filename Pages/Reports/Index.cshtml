@@ -1,0 +1,43 @@
+﻿@page
+@model ExpenseTracker.Pages.Reports.IndexModel
+@{
+}
+<h2 class="mb-5">Monthly report</h2>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Create a canvas element for the chart -->
+<canvas id="monthlyExpenseChart" width="400" height="200"></canvas>
+
+<!-- JavaScript to create the chart using the passed data -->
+<script>
+    // Get the data from ViewData
+    var monthlyExpenseData = @Html.Raw(Json.Serialize(ViewData["MonthlyExpenseData"]));
+    console.log(monthlyExpenseData);
+
+    // Extract labels and values from the data
+    var labels = monthlyExpenseData.map(item => item.Category);
+    var values = monthlyExpenseData.map(item => item.TotalExpense);
+
+    // Use Chart.js to create a bar chart
+    var ctx = document.getElementById('monthlyExpenseChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Monthly Expenses per Category',
+                data: values,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
