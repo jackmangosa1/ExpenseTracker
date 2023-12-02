@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ExpenseTracker.Data;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace ExpenseTracker.Pages.Reports
 {
@@ -33,7 +35,10 @@ namespace ExpenseTracker.Pages.Reports
         public async Task OnGet()
         {
             var monthlyExpenseData = await OnGetMonthlyExpenseData();
-            ViewData["MonthlyExpenseData"] = monthlyExpenseData.Value; // Pass the data to the Razor page
+            ViewData["MonthlyExpenseData"] = monthlyExpenseData.Value; // Access the Value property
+            Debug.WriteLine("Monthly Expense Data: " + JsonConvert.SerializeObject(monthlyExpenseData.Value));
+            // Ensure that ViewData is properly populated before rendering the view
+            ViewData["PageLoaded"] = true;
         }
     }
 }
