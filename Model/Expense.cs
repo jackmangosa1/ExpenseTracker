@@ -33,8 +33,14 @@ namespace ExpenseTracker.Model
 
         public bool IsAmountValid()
         {
-           
+
             return Budget != null && Amount > 0 && Amount <= Category.AllocatedAmount;
+        }
+
+        public bool IsAllocatedAmountExceeding50Percent(decimal totalAllocatedAmount, decimal totalBudgetAmount)
+        {
+            decimal fiftyPercentOfBudget = totalBudgetAmount * 0.5m;
+            return totalAllocatedAmount >= fiftyPercentOfBudget;
         }
     }
 }

@@ -21,9 +21,9 @@ namespace ExpenseTracker.Pages.Expenses
 
         public IActionResult OnGet()
         {
-        ViewData["BudgetID"] = new SelectList(_context.Budget, "BudgetID", "BudgetName");
-        ViewData["CategoryID"] = new SelectList(_context.ExpenseCategory, "CategoryID", "CategoryName");
-        ViewData["UserID"] = new SelectList(_context.Set<User>(), "UserID", "Email");
+            ViewData["BudgetID"] = new SelectList(_context.Budget, "BudgetID", "BudgetName");
+            ViewData["CategoryID"] = new SelectList(_context.ExpenseCategory, "CategoryID", "CategoryName");
+            ViewData["UserID"] = new SelectList(_context.Set<User>(), "UserID", "Email");
             return Page();
         }
 
@@ -68,6 +68,28 @@ namespace ExpenseTracker.Pages.Expenses
                 ViewData["CategoryID"] = new SelectList(_context.ExpenseCategory, "CategoryID", "CategoryName");
                 ViewData["UserID"] = new SelectList(_context.Set<User>(), "UserID", "Email");
                 return Page();
+            }
+
+            if (totalExpenseAmount + Expense.Amount > category.AllocatedAmount * 0.5m && totalExpenseAmount + Expense.Amount < category.AllocatedAmount)
+            {
+                ViewData["ErrorMessage"] = "Expense amount has exceeded the 50 % Category allocated amount.";
+                ViewData["BudgetID"] = new SelectList(_context.Budget, "BudgetID", "BudgetName");
+                ViewData["CategoryID"] = new SelectList(_context.ExpenseCategory, "CategoryID", "CategoryName");
+                ViewData["UserID"] = new SelectList(_context.Set<User>(), "UserID", "Email");
+                // return Page();
+                TempData["Sweet"] = "";
+                _context.Expense.Add(Expense);
+                await _context.SaveChangesAsync();
+
+                return RedirectToPage("./Index");
+            }
+
+
+            if (totalExpenseAmount + Expense.Amount > category.AllocatedAmount)
+            {
+                // Handle the case where adding the category would exceed the budget
+                ViewData["ErrorMessage"] = "Total expenses amount cannot exceed the allocated budget amount.";
+                return OnGet(); // Reload the BudgetTitles list before rendering the page
             }
 
             _context.Expense.Add(Expense);
