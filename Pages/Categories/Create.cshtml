@@ -7,19 +7,40 @@
 
 <h1 class="mb-4">Create Category</h1>
 
-
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            @if (TempData.ContainsKey("DisplayPopup") && (bool)TempData["DisplayPopup"])
+            {
+                <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="infoModalLabel">Informational Popup</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>You have reached half of your budget!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
             @if (ViewData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger" role="alert">
                     @ViewData["ErrorMessage"]
                 </div>
             }
-            
+
             <div class="form-group">
-                <input asp-for="Category.UserID"  class="form-control mb-2" />
+                <input asp-for="Category.UserID" class="form-control mb-2" />
             </div>
             <div class="form-group mb-2">
                 <label asp-for="Category.BudgetID" class="control-label">Budget Title</label>
@@ -47,5 +68,20 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var displayPopup = @(TempData.ContainsKey("DisplayPopup") && (bool)TempData["DisplayPopup"] ? true : false);
+
+            if (displayPopup) {
+                var infoModal = document.getElementById('infoModal');
+                if (infoModal) {
+                    infoModal.classList.add('show');
+                }
+            }
+        });
+    </script>
 }
