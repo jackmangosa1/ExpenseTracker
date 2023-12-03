@@ -12,9 +12,9 @@ namespace ExpenseTracker.Pages.Categories
 {
     public class DeleteModel : PageModel
     {
-        private readonly ExpenseTracker.Data.ExpenseTrackerContext _context;
+        private readonly ExpenseTrackerContext _context;
 
-        public DeleteModel(ExpenseTracker.Data.ExpenseTrackerContext context)
+        public DeleteModel(ExpenseTrackerContext context)
         {
             _context = context;
         }
@@ -52,8 +52,12 @@ namespace ExpenseTracker.Pages.Categories
             var category = await _context.ExpenseCategory.FindAsync(id);
             if (category != null)
             {
-                Category = category;
-                _context.ExpenseCategory.Remove(Category);
+                // Manually delete related expenses
+                var relatedExpenses = _context.Expense.Where(e => e.CategoryID == id);
+                _context.Expense.RemoveRange(relatedExpenses);
+
+                // Remove the category
+                _context.ExpenseCategory.Remove(category);
                 await _context.SaveChangesAsync();
             }
 
