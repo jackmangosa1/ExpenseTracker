@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,42 +49,8 @@ namespace ExpenseTracker.Pages.Categories
                 return OnGet(); // Reload the BudgetTitles list before rendering the page
             }
 
-            // Calculate totalAllocatedAmount from your data context
-            decimal totalAllocatedAmount = _context.ExpenseCategory
-                .Where(ec => ec.BudgetID == Category.BudgetID)
-                .Sum(c => c.AllocatedAmount);
-
-            // Get the total budget amount
-            var budget = _context.Budget.FirstOrDefault(b => b.BudgetID == Category.BudgetID);
-            decimal totalBudgetAmount = budget?.TotalAmount ?? 0;
-
-            // Check if allocated amount exceeds 50% of the budget amount
-            if (Category.IsAllocatedAmountExceeding50Percent(totalAllocatedAmount, totalBudgetAmount) && totalAllocatedAmount + Category.AllocatedAmount < totalBudgetAmount)
-            {
-                TempData["Sweet"] = "";
-
-                
-                    _context.ExpenseCategory.Add(Category);
-                    await _context.SaveChangesAsync();
-            
-
-                // Reload the BudgetTitles list after adding a category
-                BudgetTitles = GetBudgetTitles();
-                return RedirectToPage("Index");
-            }
-
-
-            if(totalAllocatedAmount + Category.AllocatedAmount > totalBudgetAmount)
-            {
-                // Handle the case where adding the category would exceed the budget
-                ViewData["ErrorMessage"] = "Total allocated amount cannot exceed the budget amount.";
-                return OnGet(); // Reload the BudgetTitles list before rendering the page
-            }
-
-
-
-            //var budget = _context.Budget
-            //   .FirstOrDefault(b => b.BudgetID == Category.BudgetID);
+            var budget = _context.Budget
+                .FirstOrDefault(b => b.BudgetID == Category.BudgetID);
 
             if (budget == null)
             {
@@ -93,31 +59,19 @@ namespace ExpenseTracker.Pages.Categories
             }
 
             // Retrieve the associated expense categories
-           /* var relatedExpenseCategories = _context.ExpenseCategory
+            var relatedExpenseCategories = _context.ExpenseCategory
                 .Where(ec => ec.BudgetID == Category.BudgetID)
                 .ToList();
 
             // Calculate the total allocated amount for the budget's categories
             decimal totalAllocatedAmount = relatedExpenseCategories.Sum(c => c.AllocatedAmount);
 
-            // Calculate 50% of the budget amount
-            decimal fiftyPercentOfBudget = budget.TotalAmount * 0.5m;
-
-          // Check if the new category's allocation exceeds the budget amount
+            // Check if the new category's allocation exceeds the budget amount
             if (totalAllocatedAmount + Category.AllocatedAmount > budget.TotalAmount)
             {
                 ViewData["ErrorMessage"] = "Allocated amount cannot exceed budget amount.";
-               return OnGet(); // Reload the BudgetTitles list before rendering the page
+                return OnGet(); // Reload the BudgetTitles list before rendering the page
             }
-
-            if (totalAllocatedAmount + Category.AllocatedAmount >= budget.TotalAmount * 0.5m)
-            {
-                ViewData["FiftyMessage"] = "Allocated amount has exceeded the 50% budget amount.";
-                //return OnGet(); // Reload the BudgetTitles list before rendering the page
-            }*/
-
-             ViewData["totalAllocatedAmount"] = totalAllocatedAmount;
-             ViewData["budgetTotalAmount"] = budget;
 
             _context.ExpenseCategory.Add(Category);
             await _context.SaveChangesAsync();
